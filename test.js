@@ -179,18 +179,20 @@ function createQuestions(dataObj){
             exclude = op.exclude.slice(1,-1).split(",");
           }
         }
-        new QS.Option( op.type, op.value, op.display, exclude ).save()
+        if(op.type && op.value){
+          new QS.Option( op.type, op.value, op.display, exclude ).save()
+        }
       } )
     });
     return new QS.QuestionSet(
       questions.reduce( (output,ar) => output.concat(
         ar.map( q => {
           let params = q.params ? JSON.parse(q.params) : null;
-          if(ar.number){
+          if(ar.optionNumber){
             if(params){
-              params = Object.assign(params, {optionNumber: number})
+              params = Object.assign(params, {optionNumber: ar.optionNumber})
             }else{
-              params = {optionNumber: number}
+              params = {optionNumber: ar.optionNumber}
             }
           }
           let hints = q.hints ? /^\[.*?\]$/u.test(q.hints) ? q.hints.slice(1,-1).split(",") : q.hints : null;
